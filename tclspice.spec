@@ -10,6 +10,7 @@ Source0:	http://dl.sourceforge.net/tclspice/%{name}-%{version}.tar.gz
 URL:		http://tclspice.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
+Obsoletes:	ngspice-rework
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
