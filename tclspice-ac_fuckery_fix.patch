@@ -1,0 +1,358 @@
+--- ./configure.in.org	Sun Feb 22 22:59:36 2004
++++ ./configure.in	Sun Feb 22 22:59:09 2004
+@@ -1,73 +1,140 @@
+ dnl Process this file with autoconf to produce a configure script.
+-AC_INIT(src/main.c)
+-
++AC_INIT([tclspice],[0.2.15],[])
++AC_CONFIG_SRCDIR([src/main.c])
+ dnl Create a configuration header
+ AM_CONFIG_HEADER(config.h)
+ 
+ dnl Initialize automake stuff
+-AM_INIT_AUTOMAKE(tclspice,0.2.15)
++AM_INIT_AUTOMAKE
++
++dnl Checks for ANSI-C header files.
++AC_HEADER_STDC
+ 
++####################################################
+ dnl --enable-ftedebug : enable frontend debug macros
+ AC_ARG_ENABLE(ftedebug,
+-    [  --enable-ftedebug        Enable ngspice frontend debug])
++	      AC_HELP_STRING([--enable-ftedebug],[Enable ngspice frontend debug]),
++	      [AC_DEFINE(FTEDEBUG)]
++	      )
+     
+ dnl --enable-ansi : try to force --ansi option to the compiler
+ AC_ARG_ENABLE(ansi,
+-    [  --enable-ansi           Force --ansi option for compilation])
++	      AC_HELP_STRING([--enable-ansi],[Force --ansi option for compilation]),
++	      [AM_PROG_CC_STDC
++	       if test ! "$am_cv_prog_cc_stdc"="yes"; then
++		       AC_MSG_WARN([Failed to find Ansi flag!])
++	       fi
++	      ])
+ 
+ dnl --disable-debug : remove -g and -Wall  option to the compiler
+ AC_ARG_ENABLE(debug,
+-    [  --enable-debug          Add -g option for compilation (default)])
++	      AC_HELP_STRING([--enable-debug],[Add -g option for compilation]),
++	      [CFLAGS="$CFLAGS -g"],
++	      [AC_MSG_WARN([Removing debugging option!])]
++	      )
+ 
+ dnl --enable-checker : add --with-checker-debug  option to the compiler
+ AC_ARG_ENABLE(checker,
+-    [  --enable-checkergcc     Option for compilation with checkergcc])
++	      AC_HELP_STRING([--enable-checkergcc],[Option for compilation with checkergcc]),
++	      [CC="checkergcc"]
++	      )
+ 
+ dnl --enable-bypass : define BYPASS for the code
+ AC_ARG_ENABLE(nobypass,
+-    [  --enable-nobypass       Don't bypass recalculations of slowly changing variables])
+-
++	      AC_HELP_STRING([--enable-nobypass],[Don't bypass recalculations of slowly changing variables]),
++	      [AC_DEFINE(NOBYPASS)]
++	      )
++	      
+ dnl --enable-predictor : define PREDICTOR for the code
+ AC_ARG_ENABLE(predictor,
+-    [  --enable-predictor      Enables a predictor method for convergence])
++	      AC_HELP_STRING([--enable-predictor],[Enables a predictor method for convergence]),
++	      [AC_DEFINE(PREDICTOR)]
++	      )
+ 
+ dnl --enable-sense2 : define HAVE_SENSE2 for the code
+ AC_ARG_ENABLE(sense2,
+-    [  --enable-sense2         Use spice2 sensitivity analysis])
++	      AC_HELP_STRING([--enable-sense2],[Use spice2 sensitivity analysis]),
++	      [AC_DEFINE(WANT_SENSE2)]
++	      )
+ 
+ dnl --enable-intnoise : define INT_NOISE for the code
+ AC_ARG_ENABLE(intnoise,
+-    [  --enable-intnoise       Enables noise integration in noise analysis])
++	      AC_HELP_STRING([--enable-intnoise],[Enables noise integration in noise analysis]),
++	      [AC_DEFINE(INT_NOISE)]
++	      )
+ 
+ dnl --enable-smoketest : a smoketest
+ AC_ARG_ENABLE(smoketest,
+-    [  --enable-smoketest      Enables smoketest compile])
++	      AC_HELP_STRING([--enable-smoketest],[Enables smoketest compile]),
++	      [
++	       dnl	CFLAGS="$CFLAGS -Werror"
++	       CFLAGS="$CFLAGS -pedantic -W -Wmissing-prototypes"
++	       CFLAGS="$CFLAGS -Wstrict-prototypes -Wtraditional"
++	       CFLAGS="$CFLAGS -Wconversion -Wshadow -Wpointer-arith"
++	       CFLAGS="$CFLAGS -Wcast-qual -Wcast-align -Wwrite-strings"
++	       CFLAGS="$CFLAGS -Waggregate-return -fshort-enums -fno-common"
++	       CFLAGS="$CFLAGS -Wnested-externs -Dinline= -g -O4"]
++	      )
+ 
+ dnl --enable-experimental : define EXPERIMENTAL_CODE for the code
+ AC_ARG_ENABLE(experimental,
+-    [  --enable-experimental   Enables some experimental code])
++	      AC_HELP_STRING([--enable-experimental],[Enables some experimental code]),
++	      [AC_DEFINE(EXPERIMENTAL_CODE)]
++	      )
+ 
+ dnl --enable-ekv: define HAVE_EKV in the code. This is for EKV model support
+ AC_ARG_ENABLE(ekv,
+-    [  --enable-ekv            Enables ekv model *not in standard distribution*])
++	      AC_HELP_STRING([--enable-ekv],[Enables ekv model *not in standard distribution*]),
++	      [AC_DEFINE(HAVE_EKV)
++	      EKVDIR="ekv"
++	      EKVLIB="spicelib/devices/ekv/libekv.la"],
++	      [EKVDIR=""
++	       EKVLIB=""]
++	      )
++AC_SUBST(EKVDIR)
++AC_SUBST(EKVLIB)
+ 
+ dnl --enable-xspice: define XSPICE in the code. This is for xspice support
+ AC_ARG_ENABLE(xspice,
+-    [  --enable-xspice         Enables XSpice enchancements, experimental *not in standard distribution*])
++	      AC_HELP_STRING([--enable-xspice],[Enables XSpice enchancements, experimental *not in standard distribution*]),
++	      [AC_DEFINE(XSPICE)
++	      AC_PROG_YACC
++	      AM_PROG_LEX
++	      XSPICEDIR="xspice"
++	      XSPICELIB1="$XSPICEDIR/cm/libcmxsp.a \
++	      $XSPICEDIR/mif/libmifxsp.a"
++	      XSPICELIB2="$XSPICEDIR/evt/libevtxsp.a \
++	      $XSPICEDIR/enh/libenhxsp.a \
++	      $XSPICEDIR/ipc/libipcxsp.a \
++	      $XSPICEDIR/idn/libidnxsp.a \
++	      -ldl"],
++	      [XSPCIEDIR=""
++	       XSPICELIB1=""
++	       XSPICELIB2=""]
++	      )
++AC_SUBST(XSPICEDIR)
++AC_SUBST(XSPICELIB1)
++AC_SUBST(XSPICELIB2)
+ 
+ dnl --with-tcl: define TCL_MODULE in the code. This is for tcl support
+ AC_ARG_WITH(tcl,
+-    [  --with-tcl[=tcldir]         Compiles the tcl module instead, experimental, see README.Tcl])
++	    AC_HELP_STRING([--with-tcl[=tcldir]],[Compiles the tcl module instead, experimental, see README.Tcl])
++	    )
+ 
+ dnl --enable-cluster: define CLUSTER in the code. This is for tcl support
+ AC_ARG_ENABLE(cluster,
+-    [  --enable-cluster     Enables cluster support, experimental *not in standard distribution*])
++	      AC_HELP_STRING([--enable-cluster],[Enables cluster support, experimental *not in standard distribution*]),
++	      [AC_DEFINE(CLUSTER)
++	      LIBS="$LIBS -lpthread"]
++	      )
+ 
+ dnl --with-readline:  Includes GNU readline support into CLI.  Default is "yes".
+ dnl exclude readline libs by saying --with-readline=no at configure time.
+ AC_ARG_WITH(readline,
+-  [  --with-readline[=yes/no]   Enable GNU readline support for CLI.  Default=yes.])
++	    AC_HELP_STRING([--with-readline[=yes/no]],[Enable GNU readline support for CLI.  Default=yes.])
++	    )
+ 
++#################################################
+ dnl Enable maintainer commands only if requested
+ AM_MAINTAINER_MODE
+ 
+@@ -80,42 +147,11 @@
+ 	CFLAGS="$CFLAGS -Wall "
+ fi
+ 
+-if test "$enable_debug" = "no"; then
+-	AC_MSG_WARN(Removing debugging option!)
+-	CFLAGS=" "
+-fi
+-
+-
+-dnl Not sure that this will work....
+-if test "$with_checkergcc" = "yes"; then
+-        CC="checkergcc"
+-fi      
+-
+-
+-dnl Checks for ANSI-C header files.
+-AC_HEADER_STDC
+-
+-if test "$enable_ansi" = "yes"; then
+-	AM_PROG_CC_STDC
+-	if test ! "$am_cv_prog_cc_stdc"="yes"; then
+-	AC_MSG_WARN(Failed to find Ansi flag!)
+-	fi	
+-fi
+-
+-if test "$enable_smoketest" = "yes"; then
+-dnl	CFLAGS="$CFLAGS -Werror"
+-	CFLAGS="$CFLAGS -pedantic -W -Wmissing-prototypes"
+-	CFLAGS="$CFLAGS -Wstrict-prototypes -Wtraditional"
+-	CFLAGS="$CFLAGS -Wconversion -Wshadow -Wpointer-arith"
+-	CFLAGS="$CFLAGS -Wcast-qual -Wcast-align -Wwrite-strings"
+-	CFLAGS="$CFLAGS -Waggregate-return -fshort-enums -fno-common"
+-	CFLAGS="$CFLAGS -Wnested-externs -Dinline= -g -O4"
+-fi
+-
+-
+ dnl Chech system we're on , and tune accordingly 
+ AC_CANONICAL_HOST
+ 
++
++#########################################################
+ dnl
+ dnl The tclSpice options
+ dnl
+@@ -180,8 +216,7 @@
+ AC_MSG_RESULT([${tcl_config_sh}])
+ 
+ if test "x$tcl_config_sh" = "x" ; then
+-  echo "can't find Tcl configuration script \"tclConfig.sh\""
+-  exit 1
++	AC_MSG_ERROR([can't find Tcl configuration script tclConfig.sh])
+ fi
+ 
+ . $tcl_config_sh	
+@@ -190,9 +225,12 @@
+ 
+ AC_CHECK_HEADERS(tcl.h blt.h,,AC_MSG_ERROR(Couldn't find Tcl/BLT headers),$TCL_INCLUDE_SPEC)
+ 
+-if test ! -x "$TCL_EXEC_PREFIX/bin/tclsh$TCL_VERSION" ; then
+-AC_MSG_ERROR(Couldn't find $TCL_EXEC_PREFIX/bin/tclsh$TCL_VERSION)
+-fi
++AC_CHECK_FILE($TCL_EXEC_PREFIX/bin/tclsh,
++	      [TCLSH="$TCL_EXEC_PREFIX/bin/tclsh"],
++	      [AC_CHECK_FILE($TCL_EXEC_PREFIX/bin/tclsh$TCL_VERSION,
++			     [TCLSH="$TCL_EXEC_PREFIX/bin/tclsh$TCL_VERSION"],
++			     [AC_MSG_ERROR([Couldn't find tclsh])])
++	      ])
+ 
+ AC_MSG_CHECKING(for TCL module BLT)
+ rm -f conftest.tcl
+@@ -200,21 +238,23 @@
+ package require BLT;
+ exit;
+ EOF
+-if ($TCL_EXEC_PREFIX/bin/tclsh$TCL_VERSION conftest.tcl; exit) 2>/dev/null
++
++if ($TCLSH conftest.tcl; exit) 2>/dev/null
+ then
+-   AC_MSG_RESULT(Found)
++	AC_MSG_RESULT(Found)
+ else
+-   AC_MSG_ERROR(Couldn't find BLT)
++	AC_MSG_ERROR(Couldn't find BLT)
+ fi
+ rm -f conftest.tcl
+ 
++
+ AC_MSG_CHECKING(for TCL module tclreadline)
+ rm -f conftest.tcl
+ cat > conftest.tcl << EOF
+ package require tclreadline;
+ exit;
+ EOF
+-if ($TCL_EXEC_PREFIX/bin/tclsh$TCL_VERSION conftest.tcl; exit) 2>/dev/null
++if ($TCLSH conftest.tcl; exit) 2>/dev/null
+ then
+    AC_MSG_RESULT(Found)
+ else
+@@ -347,91 +387,50 @@
+ 
+ # Expand the prefix variable (this is really annoying!)
+ if eval "test x$prefix = xNONE"; then
+- dprefix=$ac_default_prefix
++	dprefix=$ac_default_prefix
+ else
+- dprefix=$prefix
++	dprefix=$prefix
+ fi
+ 
+ AC_DEFINE_UNQUOTED(NGSPICEBINDIR, "`echo $dprefix/bin`" )
+ 
+ if test "x$with_tcl" != "x" -a "$with_tcl" != "no" ; then
+-AC_DEFINE_UNQUOTED(NGSPICEDATADIR, "`echo $dprefix/share/tclspice`" )
++	AC_DEFINE_UNQUOTED(NGSPICEDATADIR, "`echo $dprefix/share/tclspice`" )
+ else
+-AC_DEFINE_UNQUOTED(NGSPICEDATADIR, "`echo $dprefix/share/ng-spice-rework`" )
++	AC_DEFINE_UNQUOTED(NGSPICEDATADIR, "`echo $dprefix/share/ng-spice-rework`" )
+ fi
++
+ AC_DEFINE_UNQUOTED(NGSPICEBUILDDATE, "`date`" )
+ 
+ 
+ # Recapitulate settings:
+ AC_MSG_RESULT(Settings which were chosen:)
+ if test "$enable_sense2" = "yes"; then
+-	AC_DEFINE(WANT_SENSE2)
+ 	AC_MSG_RESULT(Spice2 sensitivity analysis enabled)	
+ fi
+ if test "$enable_nobypass" = "yes"; then
+-	AC_DEFINE(NOBYPASS)
+ 	AC_MSG_RESULT(NOBYPASS option enabled)	
+ fi
+ if test "$enable_predictor" = "yes"; then
+-	AC_DEFINE(PREDICTOR)
+ 	AC_MSG_RESULT(PREDICTOR algorithm enabled)	
+ fi
+ if test "$enable_intnoise" = "yes"; then
+-	AC_DEFINE(INT_NOISE)
+ 	AC_MSG_RESULT(Noise integration enabled)
+ fi
+ if test "$enable_experimental" = "yes"; then
+-	AC_DEFINE(EXPERIMENTAL_CODE)
+ 	AC_MSG_RESULT(EXPERIMENTAL_CODE enabled)	
+ fi
+-
+ if test "$enable_ftedebug" = "yes"; then
+-	AC_DEFINE(FTEDEBUG)
+ 	AC_MSG_RESULT(WARNING: Frontend debug is enabled)	
+ fi
+-
+-
+ if test "$enable_ekv" = "yes"; then
+     AC_MSG_RESULT(Model EKV included)
+-    AC_DEFINE(HAVE_EKV)
+-    EKVDIR="ekv"
+-    EKVLIB="spicelib/devices/ekv/libekv.la"
+-else
+-    EKVDIR=""
+-    EKVLIB=""	
+ fi
+-AC_SUBST(EKVDIR)
+-AC_SUBST(EKVLIB)
+-
+-dnl Add new code models to the build by pointing to them here.
+ if test "$enable_xspice" = "yes"; then
+     AC_MSG_RESULT(X-Spice features included)
+-    AC_DEFINE(XSPICE)
+-    AC_PROG_YACC
+-    AM_PROG_LEX
+-    XSPICEDIR="xspice"
+-    XSPICELIB1="$XSPICEDIR/cm/libcmxsp.a \
+-    		$XSPICEDIR/mif/libmifxsp.a"
+-    XSPICELIB2="$XSPICEDIR/evt/libevtxsp.a \
+-                $XSPICEDIR/enh/libenhxsp.a \
+-	        $XSPICEDIR/ipc/libipcxsp.a \
+-		$XSPICEDIR/idn/libidnxsp.a \
+-		-ldl"
+-
+-else
+-    XSPCIEDIR=""
+-    XSPICELIB1=""
+-    XSPICELIB2=""
+ fi
+-AC_SUBST(XSPICEDIR)
+-AC_SUBST(XSPICELIB1)
+-AC_SUBST(XSPICELIB2)
+-
+-dnl Cluster option
+ if test "$enable_cluster" = "yes"; then
+    AC_MSG_RESULT(Cluster version is being compiled)
+-   AC_DEFINE(CLUSTER)
+-   LIBS="$LIBS -lpthread"   
+ fi
+ 
+ 
