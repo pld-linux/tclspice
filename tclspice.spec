@@ -7,9 +7,13 @@ License:	BSD
 Group:		Applications/Engineering
 Source0:	http://dl.sourceforge.net/tclspice/%{name}-%{version}.tar.gz
 # Source0-md5:	aa69a0289f63183dc6e1306ef54da1e0
+Patch0:		%{name}-ac_fuckery_fix.patch
 URL:		http://tclspice.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
+BuildRequires:	blt-devel > 2.4u-11
+BuildRequires:	tcl-devel >= 8.3.4
+BuildRequires:	tclreadline-devel > 2.1.0-1
 Obsoletes:	ngspice-rework
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -27,6 +31,7 @@ ulepszeniami.
 
 %prep
 %setup -q -n %{name}
+%patch0 -p1
 
 %build
 %{__aclocal}
@@ -34,7 +39,9 @@ ulepszeniami.
 %{__automake}
 %configure \
 	CPPFLAGS="%{rpmcflags} -I%{_includedir}/ncurses" \
-	--disable-debug
+	--disable-debug \
+	--enable-xspice \
+	--with-tcl
 
 %{__make}
 
