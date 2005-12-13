@@ -18,9 +18,9 @@ Obsoletes:	ngspice-rework
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-TclSpice is an improved version of Berkeley Spice designed to be
-used with the Tcl/Tk scripting language. The project is open-source
-(BSD license) and based upon the NG-Spice source code base with many
+TclSpice is an improved version of Berkeley Spice designed to be used
+with the Tcl/Tk scripting language. The project is open-source (BSD
+license) and based upon the NG-Spice source code base with many
 improvements.
 
 %description -l pl
@@ -38,7 +38,7 @@ ulepszeniami.
 %{__autoconf}
 %{__automake}
 %configure \
-	CPPFLAGS="%{rpmcflags} -I%{_includedir}/ncurses" \
+	CPPFLAGS="%{rpmcflags} -I/usr/include/ncurses" \
 	--disable-debug \
 	--enable-xspice \
 	--with-tcl
