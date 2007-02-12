@@ -1,5 +1,5 @@
 Summary:	TclSpice - improved version of Berkeley Spice
-Summary(pl):	TclSpice - ulepszona wersja Berkeley Spice
+Summary(pl.UTF-8):   TclSpice - ulepszona wersja Berkeley Spice
 Name:		tclspice
 Version:	0.2.15
 Release:	1
@@ -23,10 +23,10 @@ with the Tcl/Tk scripting language. The project is open-source (BSD
 license) and based upon the NG-Spice source code base with many
 improvements.
 
-%description -l pl
-TclSpice to ulepszona wersja Berkeley Spice zaprojektowana do uøywania
-z jÍzykiem skryptowym Tcl/Tk. Projekt ma otwarte ºrÛd≥a (na licencji
-BSD) i jest oparty na kodzie ºrÛd≥owym NG-Spice z wieloma
+%description -l pl.UTF-8
+TclSpice to ulepszona wersja Berkeley Spice zaprojektowana do u≈ºywania
+z jƒôzykiem skryptowym Tcl/Tk. Projekt ma otwarte ≈∫r√≥d≈Ça (na licencji
+BSD) i jest oparty na kodzie ≈∫r√≥d≈Çowym NG-Spice z wieloma
 ulepszeniami.
 
 %prep
