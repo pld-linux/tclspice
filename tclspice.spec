@@ -1,5 +1,5 @@
 Summary:	TclSpice - improved version of Berkeley Spice
-Summary(pl.UTF-8):   TclSpice - ulepszona wersja Berkeley Spice
+Summary(pl.UTF-8):	TclSpice - ulepszona wersja Berkeley Spice
 Name:		tclspice
 Version:	0.2.15
 Release:	1
